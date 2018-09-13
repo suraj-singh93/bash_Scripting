@@ -1,0 +1,52 @@
+#!/bin/bash
+
+### valided IP ####
+#SAMPLE FILE ENTRY:
+#HOST1_IP=xx.xx.xx.xx
+#HOST2_IP=xx.xx.xx.xx.xx
+#HOST3_IP=xx.xx.xx.256
+
+IP_VALIDATION_FLAG=1
+
+valid_ip()
+{
+
+    local  ip=$1
+    local  stat=1
+
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+
+    if [ $stat -eq 1 ]; then
+       echo -en '\E[31m'"\033[5m ERROR: "$2": "$1" not right format\n\033[0m" | tee -a  $LOG_FILE
+       IP_VALIDATION_FLAG=0
+    fi
+}
+
+
+
+Valided_Configuration_IP()
+{
+        local IP_LIST=`grep -ir _IP <config_file>`
+        local SPLIT_LIST=$(echo $IP_LIST | tr " " "\n")
+        for IPs in $SPLIT_LIST
+        do
+                local ip="$(cut -d'=' -f2 <<<"$IPs")"
+                local node_name="$(cut -d'=' -f1 <<<"$IPs")";
+                valid_ip ${ip} ${node_name};
+        done
+}
+
+Valided_Configuration_IP;
+if [ $IP_VALIDATION_FLAG -eq 0 ]; then
+       echo -en '\E[31m'"\033[5m ERROR: Please use right format for IPs\n\033[0m" | tee -a  $LOG_FILE
+       exit 1
+fi
