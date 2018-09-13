@@ -1,0 +1,6 @@
+#!/bin/bash
+#echo -en '\E[32m'"\033[1m INFO: Success Messgae\n\033[0m"   # Green
+
+#echo -en '\E[31m'"\033[1m ERROR: Error Message\n\033[0m"   # Red
+
+#echo -en "\E[33m INFO : Processing\033[0m"  # yellow
