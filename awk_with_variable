@@ -1,0 +1,2 @@
+#!/bin/bash
+awk  -v start=1 'NR==start, NR==start+4' <file_name>
