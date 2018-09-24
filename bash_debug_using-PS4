@@ -1,0 +1,5 @@
+PS4='Line $LINENO @ $(date +%s.%N): ' bash -x <script-name>
+OR
+export PS4='Line $LINENO @ $(date +%s.%N): '
+run your script using command
+bash -x test.sh
